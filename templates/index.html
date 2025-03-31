@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuel Consumption Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(225, 60, 0);
+            text-align: center;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        input, button {
+            width: 80%;
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: rgb(231, 193, 27);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: rgb(21, 134, 145);
+        }
+        label {
+            font-weight: bold;
+            display: inline-block;
+            width: 30%;
+            text-align: right;
+            margin-right: 10px;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Fuel Consumption and Price Prediction</h2>
+        <form id="predictionForm">
+            <div class="form-group">
+                <label for="year">Year:</label>
+                <input type="number" id="year" name="year" placeholder="Enter Year" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="make">Make (Encoded):</label>
+                <input type="number" id="make" name="make" placeholder="Enter Make" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="model">Model (Encoded):</label>
+                <input type="number" id="model" name="model" placeholder="Enter Model" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="vehicle_class">Vehicle Class (Encoded):</label>
+                <input type="number" id="vehicle_class" name="vehicle_class" placeholder="Enter Vehicle Class" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="engine_size">Engine Size (L):</label>
+                <input type="number" step="0.1" id="engine_size" name="engine_size" placeholder="Enter Engine Size" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="cylinders">Cylinders:</label>
+                <input type="number" id="cylinders" name="cylinders" placeholder="Enter Number of Cylinders" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="transmission">Transmission (Encoded):</label>
+                <input type="number" id="transmission" name="transmission" placeholder="Enter Transmission" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="fuel">Fuel (Encoded):</label>
+                <input type="number" id="fuel" name="fuel" placeholder="Enter Fuel Type" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="hwy_l_100km">Highway (L/100 km):</label>
+                <input type="number" step="0.1" id="hwy_l_100km" name="hwy_l_100km" placeholder="Enter Highway Fuel Consumption" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="comb_l_100km">Combined (L/100 km):</label>
+                <input type="number" step="0.1" id="comb_l_100km" name="comb_l_100km" placeholder="Enter Combined Fuel Consumption" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="comb_mpg">Combined (mpg):</label>
+                <input type="number" id="comb_mpg" name="comb_mpg" placeholder="Enter Combined MPG" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="emissions">Emissions (g/km):</label>
+                <input type="number" step="0.1" id="emissions" name="emissions" placeholder="Enter Emissions" required>
+            </div>
+            
+            <button type="submit">Predict</button>
+        </form>
+
+        <h3>Prediction Results:</h3>
+        <p><strong>Fuel Consumption:</strong> <span id="fuelConsumption">-</span></p>
+        <p><strong>Price:</strong> <span id="price">-</span></p>
+    </div>
+
+    <script>
+        document.getElementById("predictionForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let formData = new FormData(event.target);
+
+            fetch("/predict", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("fuelConsumption").textContent = data.predicted_fuel_consumption;
+                document.getElementById("price").textContent = data.predicted_price;
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
+</body>
+</html>
